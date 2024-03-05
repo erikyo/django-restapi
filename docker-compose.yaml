@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  db:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mydatabaseuser"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    container_name: api
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DJANGO_SUPERUSER_ADMIN}
+      PGADMIN_DEFAULT_PASSWORD: ${DJANGO_SUPERUSER_PASS}
+    ports:
+      - "5050:80"
+    depends_on:
+      - web
+      - db
+
+volumes:
+  db_data:
