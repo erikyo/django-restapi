@@ -67,20 +67,20 @@ PGADMIN_DEFAULT_PASSWORD = os.environ.get('DJANGO_SUPERUSER_PASS', 'admin')
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-POSTGRES_DB = os.environ.get('POSTGRES_DB', 'mydatabase')
-POSTGRES_USER = os.environ.get('POSTGRES_USER', 'mydatabaseuser')
-POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'mydatabasepassword')
-POSTGRES_HOST = os.environ.get('POSTGRES_HOST', 'postgres')
-POSTGRES_PORT = os.environ.get('POSTGRES_PORT', '5432')
+MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE', 'database')
+MYSQL_USER = os.environ.get('MYSQL_USER', 'user')
+MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'pass')
+MYSQL_HOST = os.environ.get('MYSQL_HOST', '127.0.0.1')
+MYSQL_PORT = os.environ.get('MYSQL_PORT', '3306')
 
 DATABASES = {
     'default': {
-        "ENGINE": "django.db.backends.postgresql",
-        'NAME': POSTGRES_DB,
-        'USER': POSTGRES_USER,
-        'PASSWORD': POSTGRES_PASSWORD,
-        "HOST": POSTGRES_HOST,
-        "PORT": POSTGRES_PORT,
+        "ENGINE": 'django.db.backends.mysql',
+        'NAME': MYSQL_DATABASE,
+        'USER': MYSQL_USER,
+        'PASSWORD': MYSQL_PASSWORD,
+        "HOST": MYSQL_HOST,
+        "PORT": MYSQL_PORT,
     }
 }
 

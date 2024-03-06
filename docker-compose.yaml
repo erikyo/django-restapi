@@ -2,22 +2,24 @@ version: '3'
 
 services:
   db:
-    container_name: postgres
-    image: postgres:latest
+    container_name: mysql
+    image: mysql:latest
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - db_data:/var/lib/postgresql/data
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    restart: always
     ports:
-      - "5432:5432"
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mydatabaseuser"]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   web:
     container_name: api
@@ -34,13 +36,13 @@ services:
         condition: service_healthy
     restart: always
 
-  pgadmin:
-    image: dpage/pgadmin4
+  adminer:
+    image: adminer
+    restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${DJANGO_SUPERUSER_ADMIN}
-      PGADMIN_DEFAULT_PASSWORD: ${DJANGO_SUPERUSER_PASS}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "5050:80"
+      - 80:8080
     depends_on:
       - web
       - db

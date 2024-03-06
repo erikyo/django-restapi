@@ -1,4 +1,3 @@
-# api_v1/models.py
 from django.db import models
 
 class Category(models.Model):
@@ -8,6 +7,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        db_table = 'categories'
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -15,3 +17,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        db_table = 'products'
