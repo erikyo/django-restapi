@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from decouple import config, Csv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,12 +10,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-yhbwnb!@b+m!tnn@t1u@5be_sl)9bkbhimw(%vafs6fom!d5it'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 # Application definition
 
@@ -40,7 +42,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'restapi.urls'
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -58,28 +60,22 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'restapi.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # PGA
-PGADMIN_DEFAULT_EMAIL = os.environ.get('DJANGO_SUPERUSER_ADMIN', 'admin@example.com')
-PGADMIN_DEFAULT_PASSWORD = os.environ.get('DJANGO_SUPERUSER_PASS', 'admin')
+PGADMIN_DEFAULT_EMAIL = config('DJANGO_SUPERUSER_ADMIN')
+PGADMIN_DEFAULT_PASSWORD = config('DJANGO_SUPERUSER_PASS')
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE', 'database')
-MYSQL_USER = os.environ.get('MYSQL_USER', 'user')
-MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'pass')
-MYSQL_HOST = os.environ.get('MYSQL_HOST', '127.0.0.1')
-MYSQL_PORT = os.environ.get('MYSQL_PORT', '3306')
-
 DATABASES = {
     'default': {
         "ENGINE": 'django.db.backends.mysql',
-        'NAME': MYSQL_DATABASE,
-        'USER': MYSQL_USER,
-        'PASSWORD': MYSQL_PASSWORD,
-        "HOST": MYSQL_HOST,
-        "PORT": MYSQL_PORT,
+        'NAME': config('MYSQL_DATABASE'),
+        'USER': config('MYSQL_USER'),
+        'PASSWORD': config('MYSQL_PASSWORD'),
+        "HOST": config('MYSQL_HOST'),
+        "PORT": config('MYSQL_PORT'),
         'TEST': {
             'NAME': 'database_test',
         },

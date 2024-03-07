@@ -1,22 +1,23 @@
 # Use an official Python runtime as a parent image
 FROM python:3.10
 
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 # Set the working directory to /code
 WORKDIR /code
 
-# Copy the current directory contents into the container at /code
-COPY . /code
+COPY ./requirements.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
+RUN apt-get update -y && \
+    apt-get install -y netcat-traditional && \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+COPY ./entrypoint.sh .
+RUN chmod +x /code/entrypoint.sh
 
-# Define environment variable for Django
-ENV DJANGO_SETTINGS_MODULE=restapi.settings
+COPY . .
 
-# Create and apply migrations, and create a superuser
-CMD echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python manage.py shell && \
-    python manage.py migrate && \
-    python manage.py runserver 0.0.0.0:8000
+ENTRYPOINT ["/code/entrypoint.sh"]

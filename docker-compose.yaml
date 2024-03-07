@@ -14,27 +14,21 @@ services:
       - "${MYSQL_PORT}:${MYSQL_PORT}"
     volumes:
       - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   web:
     container_name: api
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
     env_file:
-      - .env
-    volumes:
-      - .:/code
+      - ./.env
     ports:
       - "8000:8000"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     restart: always
+    volumes:
+      - .:/code
 
   adminer:
     image: adminer
@@ -51,3 +45,5 @@ services:
 
 volumes:
   db_data:
+  static_volume:
+  media_volume:
