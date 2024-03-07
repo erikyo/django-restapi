@@ -1,3 +1,9 @@
+ALTER ROLE user CREATEDB;
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';
+
+CREATE DATABASE IF NOT EXISTS ecommerce;
+CREATE DATABASE IF NOT EXISTS database_test;
+
 CREATE TABLE categories (
     id serial PRIMARY KEY,
     name VARCHAR (255) UNIQUE,

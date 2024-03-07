@@ -13,3 +13,9 @@ docker-compose up -d --no-deps --build
 ```
 docker-compose down -v
 ```
+
+### Testing
+
+```
+python manage.py test
+```
