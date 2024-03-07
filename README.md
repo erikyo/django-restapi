@@ -19,3 +19,9 @@ docker-compose down -v
 ```
 python manage.py test
 ```
+
+--- 
+
+#### Repositories from which I took inspiration
+
+- https://github.com/earthcomfy/django-docker-template
