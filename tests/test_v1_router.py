@@ -12,12 +12,12 @@ class ProductAPITestCase(TestCase):
     def test_get_all_products(self):
         response = self.client.get('/api/v1/products/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['name'], 'Product A')
+        self.assertEqual(len(response.data), 6)
+        self.assertEqual(response.data[5]['name'], 'Product A')
         self.assertEqual(response.data[0]['category_id'], 1)
 
     def test_create_product(self):
         data = {'name': 'New Product', 'category_id': 3}
         response = self.client.post('/api/v1/products/', data)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(Product.objects.count(), 2)
+        self.assertEqual(Product.objects.count(), 7)

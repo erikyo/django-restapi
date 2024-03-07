@@ -121,4 +121,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-TEST_RUNNER = 'tests.test_v1_router'
+TEST_RUNNER = 'tests.PytestTestRunner'
